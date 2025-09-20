@@ -1,0 +1,60 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+-- 创建主窗口
+local Window = Rayfield:CreateWindow({
+    Name = "欢迎使用打榜脚本",
+    LoadingTitle = "加载中...",
+    LoadingSubtitle = "检测到你在使用此脚本",
+    ConfigurationSaving = {
+        Enabled = false,
+    },
+})
+
+-- 创建标签页
+local Tab1 = Window:CreateTab("jules rng")
+
+
+-- 1. 切换开关(Toggle)示例
+local ToggleExample = Tab1:CreateToggle({
+    Name = "光速滚动",
+    CurrentValue = false,
+    Flag = "Julesrng",
+    Callback = function(Value)
+        print("完成:", Value)
+        getgenv().Running = true
+        while true do
+wait()
+local args = {
+	buffer.fromstring("\128\000\000\000\185\205\148-\002\000\000\000\000\000\000\000\233\253\227?")
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Roll"):FireServer(unpack(args))
+end
+getgenv().Running = false
+    end
+})
+
+
+
+local MultiDropdownExample = Tab1:CreateDropdown({
+    Name = "脚本合集",
+    Options = {"飞行v3", "暂时没更新", "未更新", "未更新"},
+    CurrentOption = {"飞行v3", "未更新"},
+    MultipleOptions = true,
+    Flag = "MultiDropdownExample",
+    Callback = function(Options)
+        print("bones:", table.concat(Options, ", "))
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gui-Fly-v3-37111"))()
+    end,
+})
+
+
+local ToggleExample = Tab1:CreateToggle({
+    Name = "通用ESP",
+    CurrentValue = false,
+    Flag = "ToggleExample",
+    Callback = function(Value)
+        print("切换开关状态:", Value)
+        getgenv().Running = true
+        local Players=game:GetService("Players")local RunService=game:GetService("RunService")local LocalPlayer=Players.LocalPlayer local LocalCharacter=LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()local LocalHead=LocalCharacter:WaitForChild("Head")local playerConnections={}local function updateNametag(player,textLabel,head)local character=player.Character if not character then return end local humanoid=character:FindFirstChildOfClass("Humanoid")local targetHead=character:FindFirstChild("Head")if humanoid and targetHead and humanoid.Health > 0 then local distance=(LocalHead.Position - targetHead.Position).Magnitude textLabel.Text=string.format("%s\n血量: %d/%d\n距离: %.1fm",player.Name,math.floor(humanoid.Health),math.floor(humanoid.MaxHealth),distance)textLabel.Visible=true else textLabel.Visible=false end end local function createNametag(player)if player==LocalPlayer then return end playerConnections[player]={}local function setupCharacter(character)local head=character:WaitForChild("Head")local billboard=Instance.new("BillboardGui")billboard.Name="PlayerNametag" billboard.Adornee=head billboard.Size=UDim2.new(0,200,0,80)billboard.StudsOffset=Vector3.new(0,3,0)billboard.AlwaysOnTop=true billboard.Parent=head local textLabel=Instance.new("TextLabel")textLabel.Size=UDim2.new(1,0,1,0)textLabel.Font=Enum.Font.GothamBold textLabel.TextSize=8 textLabel.TextColor3=Color3.new(1,0,0)textLabel.TextStrokeColor3=Color3.new(0,0,0)textLabel.TextStrokeTransparency=0.3 textLabel.BackgroundTransparency=1 textLabel.TextYAlignment=Enum.TextYAlignment.Top textLabel.Parent=billboard local heartbeatConn=RunService.Heartbeat:Connect(function()if not character or not character.Parent then heartbeatConn:Disconnect()return end updateNametag(player,textLabel,head)end)table.insert(playerConnections[player],heartbeatConn)local characterRemovedConn characterRemovedConn=character.AncestryChanged:Connect(function(_,parent)if parent==nil then billboard:Destroy()heartbeatConn:Disconnect()characterRemovedConn:Disconnect()end end)table.insert(playerConnections[player],characterRemovedConn)end if player.Character then setupCharacter(player.Character)end local charAddedConn=player.CharacterAdded:Connect(setupCharacter)table.insert(playerConnections[player],charAddedConn)end local function removeNametag(player)if playerConnections[player]then for _,conn in ipairs(playerConnections[player])do conn:Disconnect()end playerConnections[player]=nil end if player.Character then local head=player.Character:FindFirstChild("Head")if head then local nametag=head:FindFirstChild("PlayerNametag")if nametag then nametag:Destroy()end end end end Players.PlayerAdded:Connect(function(player)createNametag(player)local leavingConn leavingConn=player.AncestryChanged:Connect(function(_,parent)if parent==nil then removeNametag(player)leavingConn:Disconnect()end end)end)for _,player in ipairs(Players:GetPlayers())do if player ~=LocalPlayer then createNametag(player)local leavingConn leavingConn=player.AncestryChanged:Connect(function(_,parent)if parent==nil then removeNametag(player)leavingConn:Disconnect()end end)end end LocalPlayer.CharacterAdded:Connect(function(character)LocalCharacter=character LocalHead=character:WaitForChild("Head")end)
+    end
+})
